@@ -8,6 +8,10 @@ Our dataset consists of DICOM files. We need to preprocess these because the ima
 
 The pydicom library is used to work with these files. We will convert that to numpy arrays that will be passed to our NN.
 
+https://www.kaggle.com/sentdex/first-pass-through-data-w-3d-convnet
+
+https://www.kaggle.com/gzuidhof/full-preprocessing-tutorial
+
 ## Procedure
 Once all samples in our data have the same dimensions, they will be ready to be fed to the network.
 
