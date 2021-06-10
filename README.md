@@ -23,3 +23,20 @@ Next, once we obtain the kidney images only, these will be fed to a NN that will
 Does predicting volume give us a better result? Don't know yet but this might be useful.
 
 Then, to get disease progression, we would need eGFR. Will our model do this? How are we going to do that? Needs to be discussed with Dr Alam on Friday June 11th.
+
+## 3D Neural Network
+How does it work? 
+
+One method is to pass each slide in from 1 image in the neural network. Then predict for each slice, aggregate results and take argmax. So for example if a 3D scan has dimensions \[100, (224, 224)\], we will pass 100 224 x 224 images in the network. Our prediction, for example if we have to do 2-way classification, will be a one-hot encoded array: \[1,0\] if yes and \[0,1\] if no. Then we divide by 100 then take the argmax. 
+
+How will training work? 
+
+Taking the two-way classification example, when we train the network, \[.01,.99\] should be penalized more than \[0.49,0.51\] if the prediction is wrong. Note that both predict class 2. 
+
+Theory behind that? Pytorch or tensorflow documentation.......
+
+## Data augmentation
+We might want to add noise to increase the size of our dataset. But we should be careful in not adding too much. 
+
+
+
