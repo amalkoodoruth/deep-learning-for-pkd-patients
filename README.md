@@ -12,6 +12,17 @@ https://www.kaggle.com/sentdex/first-pass-through-data-w-3d-convnet
 
 https://www.kaggle.com/gzuidhof/full-preprocessing-tutorial
 
+## Running instructions
+* This script runs on Python 3. It can be installed from https://www.python.org/downloads/
+* Clone this repository using: git clone https://github.com/amalkoodoruth/deep-learning-for-pkd-patients.git
+* Open terminal (or command prompt on windows or similar) and change your directory to: .../deep-learning-for-pkd-patients
+* install the following libraries using the respective commands:
+  * Numpy: pip install numpy
+  * Matplotlib: pip install matplotlib
+  * Pandas: pip install pandas
+  * Pydicom: pip install pydicom
+* Run the python script using: python main.py
+
 ## Procedure
 Once all samples in our data have the same dimensions, they will be ready to be fed to the network.
 
