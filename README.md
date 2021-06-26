@@ -23,6 +23,9 @@ https://www.kaggle.com/gzuidhof/full-preprocessing-tutorial
   * Pydicom: pip install pydicom
 * Run the python script using: python main.py
 
+## Expected output
+The script should create a file named "mri_scan.png" and it should look like ![](https://github.com/amalkoodoruth/deep-learning-for-pkd-patients/blob/main/expected_output.png)
+
 ## Procedure
 Once all samples in our data have the same dimensions, they will be ready to be fed to the network.
 
