@@ -27,16 +27,8 @@ https://www.kaggle.com/gzuidhof/full-preprocessing-tutorial
 The script should create a file named "mri_scan.png" and it should look like ![](https://github.com/amalkoodoruth/deep-learning-for-pkd-patients/blob/main/expected_output.png)
 
 ## Procedure
-Once all samples in our data have the same dimensions, they will be ready to be fed to the network.
+7/1/21: As a first step, we will train a 2D segmentation model on the CHAOS dataset. We are just trying to get some code running while waiting for our real dataset.
 
-While we are not very sure of what exactly we want to do right now (June 9th), we believe that we need to first isolate the kidney. 
-
-So the first step would be segmentation. We will need to have in-house experts to segment the kidneys. That would give us our training, validation and testing set.
-Next, once we obtain the kidney images only, these will be fed to a NN that will classify the patient in classes 1A-1E. 
-
-Does predicting volume give us a better result? Don't know yet but this might be useful.
-
-Then, to get disease progression, we would need eGFR. Will our model do this? How are we going to do that? Needs to be discussed with Dr Alam on Friday June 11th.
 
 ## 3D Neural Network
 How does it work? 
