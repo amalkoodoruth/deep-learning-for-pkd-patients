@@ -18,7 +18,7 @@ class DoubleConv(nn.Module):
 
 class UNET(nn.Module): ## let's start with binary segmentation
     def __init__(
-            self, in_channels=3, out_channels=1, features=[64, 128, 256, 512]):
+            self, in_channels=1, out_channels=1, features=[64, 128, 256, 512]):
         super(UNET, self).__init__()
         self.downs = nn.ModuleList()
         self.ups = nn.ModuleList()
@@ -67,7 +67,7 @@ class UNET(nn.Module): ## let's start with binary segmentation
         return self.final_conv(x)
 
 def test():
-    x = torch.randn((3, 1, 161, 161))
+    x = torch.randn((1, 1, 161, 161))
     model = UNET(in_channels=1, out_channels=1)
     preds = model(x)
     print(preds.shape)
