@@ -12,16 +12,37 @@ https://www.kaggle.com/sentdex/first-pass-through-data-w-3d-convnet
 
 https://www.kaggle.com/gzuidhof/full-preprocessing-tutorial
 
-## Running instructions
+## Running instructions for testing Dataset class and UNET
 * This script runs on Python 3. It can be installed from https://www.python.org/downloads/
 * Clone this repository using: git clone https://github.com/amalkoodoruth/deep-learning-for-pkd-patients.git
 * Open terminal (or command prompt on windows or similar) and change your directory to: .../deep-learning-for-pkd-patients
-* install the required libraries by running ```sh 
-$ pip ```
+* install the required libraries by running ```$ pip install -r requirements.txt ```. This command will install the following libraries:
+- matplotlib
+- numpy
+- pandas
+- PIL
+- pydicom
+- torch
+* Change directory to .../deep-learning-for-pkd-patients/beta
 * Run the python script using: python main.py
 
 ## Expected output
-The script should create a file named "mri_scan.png" and it should look like ![](https://github.com/amalkoodoruth/deep-learning-for-pkd-patients/blob/main/expected_output.png)
+The following should appear in the terminal:
+
+```
+Number of images:  623
+All images loaded successfully
+----------------
+Testing UNET with inputs divisible by 16
+Input size:  torch.Size([1, 1, 160, 160])
+Output size:  torch.Size([1, 1, 160, 160])
+Input and output sizes agree
+----------------
+Testing UNET with inputs not divisible by 16
+Input size:  torch.Size([1, 1, 161, 161])
+Output size:  torch.Size([1, 1, 161, 161])
+Input and output sizes agree
+```
 
 ## Procedure
 7/1/21: As a first step, we will train a 2D segmentation model on the CHAOS dataset. We are just trying to get some code running while waiting for our real dataset.
