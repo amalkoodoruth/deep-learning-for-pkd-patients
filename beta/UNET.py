@@ -67,12 +67,23 @@ class UNET(nn.Module): ## let's start with binary segmentation
         return self.final_conv(x)
 
 def test():
-    x = torch.randn((1, 1, 161, 161))
-    model = UNET(in_channels=1, out_channels=1)
-    preds = model(x)
-    print(preds.shape)
-    print(x.shape)
-    assert preds.shape == x.shape
+    print("----------------")
+    print("Testing UNET with inputs divisible by 16")
+    x0 = torch.randn((1, 1, 160, 160))
+    model0 = UNET(in_channels=1, out_channels=1)
+    preds0 = model0(x0)
+    print("Input size: ", x0.shape)
+    print("Output size: ", preds0.shape)
+    if x0.shape == preds0.shape:
+        print("Input and output sizes agree")
 
-if __name__ == "__main__":
-    test()
+
+    print("----------------")
+    print("Testing UNET with inputs not divisible by 16")
+    x1 = torch.randn((1, 1, 161, 161))
+    model1 = UNET(in_channels=1, out_channels=1)
+    preds1 = model1(x1)
+    print("Input size: ", x1.shape)
+    print("Output size: ", preds1.shape)
+    if x1.shape == preds1.shape:
+        print("Input and output sizes agree")
