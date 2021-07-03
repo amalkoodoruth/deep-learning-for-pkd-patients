@@ -17,12 +17,12 @@ https://www.kaggle.com/gzuidhof/full-preprocessing-tutorial
 * Clone this repository using: git clone https://github.com/amalkoodoruth/deep-learning-for-pkd-patients.git
 * Open terminal (or command prompt on windows or similar) and change your directory to: .../deep-learning-for-pkd-patients
 * install the required libraries by running ```$ pip install -r requirements.txt ```. This command will install the following libraries:
-- matplotlib
-- numpy
-- pandas
-- PIL
-- pydicom
-- torch
+	- matplotlib
+	- numpy
+	- pandas
+	- Pillow
+	- pydicom
+	- torch
 * Change directory to .../deep-learning-for-pkd-patients/beta
 * Run the python script using: python main.py
 
