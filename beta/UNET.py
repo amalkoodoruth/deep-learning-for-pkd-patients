@@ -51,8 +51,8 @@ class UNET(nn.Module): ## let's start with binary segmentation
             x = self.pool(x)
 
         x = self.bottleneck(x)
-        skip_connections = skip_connections[::-1] ## reversing or = reversed(skip_connections)
-        #skip_connections = reversed(skip_connections)
+        skip_connections = skip_connections[::-1] ## reversing the list
+
 
         for i in range(0, len(self.ups), 2):
             x = self.ups[i](x)
