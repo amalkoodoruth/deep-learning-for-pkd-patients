@@ -62,5 +62,12 @@ Theory behind that? Pytorch or tensorflow documentation.......
 ## Data augmentation
 We might want to add noise to increase the size of our dataset. But we should be careful in not adding too much. 
 
+We will use affine first. Then we might be using elastic deformation. 
 
+
+## References
+
+1. https://github.com/aladdinpersson/Machine-Learning-Collection
+2. https://arxiv.org/abs/1505.04597
+3. https://www.nature.com/articles/s41598-020-77981-4.pdf
 
