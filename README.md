@@ -14,8 +14,8 @@ https://www.kaggle.com/gzuidhof/full-preprocessing-tutorial
 
 ## Running instructions for testing Dataset class and UNET
 * This script runs on Python 3. It can be installed from https://www.python.org/downloads/
-* Clone this repository using: git clone https://github.com/amalkoodoruth/deep-learning-for-pkd-patients.git
-* Open terminal (or command prompt on windows or similar) and change your directory to: .../deep-learning-for-pkd-patients
+* Open terminal (or command prompt on windows or similar) and clone this repository using: ```git clone https://github.com/amalkoodoruth/deep-learning-for-pkd-patients.git```
+* Change your directory to: .../deep-learning-for-pkd-patients
 * install the required libraries by running ```$ pip install -r requirements.txt ```. This command will install the following libraries:
 	- matplotlib
 	- numpy
@@ -52,6 +52,10 @@ Input and output sizes agree
 How does it work? 
 
 One method is to pass each slide in from 1 image in the neural network. Then predict for each slice, aggregate results and take argmax. So for example if a 3D scan has dimensions \[100, (224, 224)\], we will pass 100 224 x 224 images in the network. Our prediction, for example if we have to do 2-way classification, will be a one-hot encoded array: \[1,0\] if yes and \[0,1\] if no. Then we divide by 100 then take the argmax. 
+
+## Beta model
+
+For our beta model, we will consider each MRI slice as an independent slice. We will then try to segment the different organs from the abdomen. 
 
 How will training work? 
 
