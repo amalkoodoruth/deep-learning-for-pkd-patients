@@ -78,37 +78,37 @@ if __name__ == '__main__':
     Val = SliceDataset(val_img_paths, val_seg_paths, transform=transforms(0.5, 0.5))
 
 
-val_losses = []
-dice_scores = []
-UNet = UNET(in_channels=1, out_channels=1).to(DEVICE)
-# loss_fn = nn.BCEWithLogitsLoss()
-loss_fn = myDiceLoss()
-optimizer = optim.Adam(UNet.parameters(), lr=2 * 1e-3)
-train_loader, val_loader = get_loaders(Train, Val)
-# check_accuracy(val_loader, UNet, device=DEVICE)
-scaler = torch.cuda.amp.GradScaler()
+    val_losses = []
+    dice_scores = []
+    UNet = UNET(in_channels=1, out_channels=1).to(DEVICE)
+    # loss_fn = nn.BCEWithLogitsLoss()
+    loss_fn = myDiceLoss()
+    optimizer = optim.Adam(UNet.parameters(), lr=2 * 1e-3)
+    train_loader, val_loader = get_loaders(Train, Val)
+    # check_accuracy(val_loader, UNet, device=DEVICE)
+    scaler = torch.cuda.amp.GradScaler()
 
-NUM_EPOCHS = 10
+    NUM_EPOCHS = 10
 
-if LOAD_MODEL:
-    load_checkpoint(torch.load("my_checkpoint.pth.tar"), UNet)
+    if LOAD_MODEL:
+        load_checkpoint(torch.load("my_checkpoint.pth.tar"), UNet)
 
-for epoch in range(NUM_EPOCHS):
-    print("Epoch: {epoch}/{total}".format(epoch=epoch + 1, total=NUM_EPOCHS))
-    train_fn(train_loader, UNet, optimizer, loss_fn, scaler)
+    for epoch in range(NUM_EPOCHS):
+        print("Epoch: {epoch}/{total}".format(epoch=epoch + 1, total=NUM_EPOCHS))
+        train_fn(train_loader, UNet, optimizer, loss_fn, scaler)
 
-    # save model
-    checkpoint = {
-        "state_dict": UNet.state_dict(),
-        "optimizer": optimizer.state_dict(),
-    }
+        # save model
+        checkpoint = {
+            "state_dict": UNet.state_dict(),
+            "optimizer": optimizer.state_dict(),
+        }
 
-    # check accuracy
-    loss, dice = check_accuracy(val_loader, UNet, loss_fn, device=DEVICE)
-    val_losses.append(loss)
-    dice_scores.append(dice)
-    # # print some examples to a folder
-    # save_predictions_as_imgs(
-    #     val_loader, model, folder="saved_images/", device=DEVICE
-    # )
-save_checkpoint(checkpoint)
+        # check accuracy
+        loss, dice = check_accuracy(val_loader, UNet, loss_fn, device=DEVICE)
+        val_losses.append(loss)
+        dice_scores.append(dice)
+        # # print some examples to a folder
+        # save_predictions_as_imgs(
+        #     val_loader, model, folder="saved_images/", device=DEVICE
+        # )
+    save_checkpoint(checkpoint)

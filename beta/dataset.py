@@ -17,10 +17,11 @@ class SliceDataset(data.Dataset):
     ##
     # image path is path of X
     # seg path is path of Y
-    def __init__(self, img_paths, seg_paths):
+    def __init__(self, img_paths, seg_paths, transform=None):
 
         self.seg_paths = seg_paths
         self.img_paths = img_paths
+        self.transform = transform
 
     def __len__(self):
         return len(self.img_paths)
