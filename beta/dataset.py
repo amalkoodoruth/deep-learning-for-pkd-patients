@@ -1,10 +1,10 @@
 import os
-
+from utils import findOrgan
 import torch
 from torch.utils import data
 from torch.autograd import Variable
 
-from image_processing import load_scan, load_seg,padSlice
+from utils import load_scan, load_seg,padSlice
 
 
 class SliceDataset(data.Dataset):
@@ -41,14 +41,20 @@ class SliceDataset(data.Dataset):
         """
         img_path = self.img_paths[index]
         img = load_scan(img_path)
-        img_resized = padSlice(img)
 
         seg_exists = len(self.seg_paths) > 0
 
         if seg_exists:
             seg_path = self.seg_paths[index]
             seg = load_seg(seg_path)
-            seg_resized = padSlice(seg)
+
+            img_binary, seg_binary = findOrgan(img, seg, 'lv')
+            seg_resized = padSlice(seg_binary)
+
+        img_resized = padSlice(img_binary)
+
+        if self.transform is not None:
+            img_resized, seg_resized = self.transform((img_resized, seg_resized))
 
         # Convert images to pytorch tensors
         ## why .float() and .long()
@@ -62,5 +68,5 @@ class SliceDataset(data.Dataset):
 
         name = os.path.basename(self.img_paths[index])
 
-        return X, Y, name
+        return X, Y  # , name
 

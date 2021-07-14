@@ -2,9 +2,10 @@
 import itertools
 
 import numpy as np
-
+import torch
 import pydicom
 from PIL import Image
+from torch.utils.data import DataLoader
 
 
 
@@ -120,4 +121,77 @@ def padSlice(values):
     values = np.pad(values, ((pad[0], pad[0]), (pad[1], pad[1])), mode="constant", constant_values=0)
 
     return values
+
+
+def findOrgan(img, seg, organ):
+    if organ == 'rk':
+        value = 126
+    elif organ == 'lk':
+        value = 189
+    elif organ == 'lv':
+        value = 63
+    elif organ == 'sp':
+        value = 252
+    else:
+        print("Wrong organ selected.")
+        print("Right kidney: rk \nLeft kidney: lk \nLiver: lv \nSpleen: sp")
+        new_seg = np.zeros(seg.shape)
+        new_img = np.zeros(img.shape)
+        return new_img, new_seg
+
+    new_seg = np.zeros(seg.shape)
+    new_img = np.zeros(img.shape)
+    indices = np.where(seg == value)  # tuple of 2 arrays [i0,i1,...,in], [j0,j1,...,jn], where seg[i][j] == value
+    for i in range(len(indices[0])):
+        row = indices[0][i]
+        col = indices[1][i]
+
+        new_img[row][col] = img[row][col]
+        new_seg[row][col] = 1
+
+    return new_img, new_seg
+
+def check_accuracy(loader, model, loss_fn, device="cuda"):
+    num_correct = 0
+    num_pixels = 0
+    dice_score = 0
+    model.eval()
+
+    with torch.no_grad():
+        for x, y in loader:
+            # print("x: ", x.shape)
+            # print("y: ", y.shape)
+            x = x.unsqueeze(1).to(device)
+            # print("x: ", x.shape)
+            y = y.unsqueeze(1).to(device)
+            # print("mo la")
+            preds = torch.sigmoid(model(x))
+            preds = (preds > 0.5).float()
+            loss = loss_fn.forward(preds,y)
+            num_correct += (preds == y).sum()
+            num_pixels += torch.numel(preds)
+            dice_score += (2 * (preds * y).sum()) / (
+                (preds + y).sum() + 1e-8
+            )
+
+    print(
+        f"Got {num_correct}/{num_pixels} with acc {num_correct/num_pixels*100:.2f}"
+    )
+    print(f"Dice score: {dice_score/len(loader)}")
+    model.train()
+    return loss, dice_score/len(loader)
+
+def save_checkpoint(state, filename="my_checkpoint2liver.pth.tar"):
+    print("=> Saving checkpoint")
+    torch.save(state, filename)
+
+def load_checkpoint(checkpoint, model):
+    print("=> Loading checkpoint")
+    model.load_state_dict(checkpoint["state_dict"])
+
+def get_loaders(train_ds, val_ds):
+  train_dataloader = DataLoader(train_ds, batch_size=12)
+  val_dataloader = DataLoader(val_ds, batch_size=12)
+  return train_dataloader, val_dataloader
+
 
