@@ -35,9 +35,9 @@ print(len(test_idx))
 
 for idx in test_idx:
     new_x_path = master_path + '/MR2D/test/X/' + x_paths[idx][-20:]
-    shutil.copyfile(x_paths[idx], new_x_path)
-    os.remove(x_paths[idx])
+    # shutil.copyfile(x_paths[idx], new_x_path)
+    # os.remove(x_paths[idx])
 
     new_y_path = master_path + '/MR2D/test/Y/' + y_paths[idx][-20:]
-    shutil.copyfile(y_paths[idx], new_y_path)
-    os.remove(y_paths[idx])
+    # shutil.copyfile(y_paths[idx], new_y_path)
+    # os.remove(y_paths[idx])
