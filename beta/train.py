@@ -1,10 +1,12 @@
 from torch.utils.data import DataLoader
 from tqdm import tqdm
+import random
 import torch.optim as optim
 import os
 from UNET import UNET
 from dataset import SliceDataset
 import torch
+import math
 from DiceLoss import myDiceLoss
 from transform import transforms
 from utils import (
@@ -60,6 +62,18 @@ if __name__ == '__main__':
     seg_paths.sort()
 
     # Train = ds.SliceDataset(img_paths, seg_paths)
+    train_idx = random.sample(range(0, len(img_paths)), math.ceil(0.75*len(img_paths)))
+    train_img_paths = []
+    train_seg_paths = []
+    val_img_paths = []
+    val_seg_paths = []
+    for idx in range(len(img_paths)):
+        if idx in train_idx:
+            train_img_paths.append(img_paths[idx])
+            train_seg_paths.append(seg_paths[idx])
+        else:
+            val_img_paths.append(img_paths[idx])
+            val_seg_paths.append(seg_paths[idx])
     Train = SliceDataset(train_img_paths, train_seg_paths, transform=transforms(0.5, 0.5))
     Val = SliceDataset(val_img_paths, val_seg_paths, transform=transforms(0.5, 0.5))
 
