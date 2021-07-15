@@ -190,8 +190,26 @@ def load_checkpoint(checkpoint, model):
     model.load_state_dict(checkpoint["state_dict"])
 
 def get_loaders(train_ds, val_ds):
-  train_dataloader = DataLoader(train_ds, batch_size=12)
-  val_dataloader = DataLoader(val_ds, batch_size=12)
-  return train_dataloader, val_dataloader
+    train_dataloader = DataLoader(train_ds, batch_size=12)
+    val_dataloader = DataLoader(val_ds, batch_size=12)
+    return train_dataloader, val_dataloader
+
+def remove_bg_only_test(test_seg_paths):
+    test_idx = []
+    for path in test_seg_paths:
+        arr = load_seg(path)
+        result = np.all((arr == 0))
+        if not result:
+            test_idx.append(test_seg_paths.index(path))
+    return test_idx
+
+def clean_test_ds(test_img_paths, test_seg_paths, test_idx):
+    cleaned_img_paths = []
+    cleaned_seg_paths = []
+    for idx in test_idx:
+        cleaned_img_paths.append(test_img_paths[idx])
+        cleaned_seg_paths.append(test_seg_paths[idx])
+    return cleaned_img_paths, cleaned_seg_paths
+
 
 
