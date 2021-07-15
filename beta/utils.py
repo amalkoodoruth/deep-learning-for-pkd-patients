@@ -198,7 +198,7 @@ def remove_bg_only_test(test_seg_paths):
     test_idx = []
     for path in test_seg_paths:
         arr = load_seg(path)
-        result = np.all((arr == 0))
+        result = np.amax(arr).float() == 0.0
         if not result:
             test_idx.append(test_seg_paths.index(path))
     return test_idx
@@ -210,6 +210,8 @@ def clean_test_ds(test_img_paths, test_seg_paths, test_idx):
         cleaned_img_paths.append(test_img_paths[idx])
         cleaned_seg_paths.append(test_seg_paths[idx])
     return cleaned_img_paths, cleaned_seg_paths
+
+
 
 
 

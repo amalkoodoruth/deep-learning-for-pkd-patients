@@ -17,11 +17,13 @@ class SliceDataset(data.Dataset):
     ##
     # image path is path of X
     # seg path is path of Y
-    def __init__(self, img_paths, seg_paths, transform=None):
+    def __init__(self, img_paths, seg_paths, organ, transform=None, test=False):
 
         self.seg_paths = seg_paths
         self.img_paths = img_paths
         self.transform = transform
+        self.test = test
+        self.organ = organ
 
     def __len__(self):
         return len(self.img_paths)
@@ -49,7 +51,7 @@ class SliceDataset(data.Dataset):
             seg_path = self.seg_paths[index]
             seg = load_seg(seg_path)
 
-            img_binary, seg_binary = findOrgan(img, seg, 'lv')
+            img_binary, seg_binary = findOrgan(img, seg, self.organ)
             seg_resized = padSlice(seg_binary)
 
         img_resized = padSlice(img_binary)
