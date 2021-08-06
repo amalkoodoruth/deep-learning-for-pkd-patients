@@ -6,6 +6,7 @@ import torch
 import pydicom
 from PIL import Image
 from torch.utils.data import DataLoader
+import pandas as pd
 
 
 
@@ -146,40 +147,62 @@ def findOrgan(img, seg, organ):
         row = indices[0][i]
         col = indices[1][i]
 
-        new_img[row][col] = img[row][col]
+        # new_img[row][col] = img[row][col]
         new_seg[row][col] = 1
 
-    return new_img, new_seg
+    return img, new_seg
 
 def check_accuracy(loader, model, loss_fn, device="cuda"):
     num_correct = 0
     num_pixels = 0
     dice_score = 0
+    loss = 0
     model.eval()
+    d1 = 0
 
+    # with torch.no_grad():
+    #     for x, y in loader:
+    #         # print("x: ", x.shape)
+    #         # print("y: ", y.shape)
+    #         x = x.unsqueeze(1).to(device)
+    #         # print("x: ", x.shape)
+    #         y = y.unsqueeze(1).to(device)
+    #         # print("mo la")
+    #         preds = torch.sigmoid(model(x))
+    #         preds = (preds > 0.5).float()
+    #         loss = loss_fn.forward(preds,y)
+    #         num_correct += (preds == y).sum()
+    #         num_pixels += torch.numel(preds)
     with torch.no_grad():
         for x, y in loader:
-            # print("x: ", x.shape)
-            # print("y: ", y.shape)
             x = x.unsqueeze(1).to(device)
-            # print("x: ", x.shape)
-            y = y.unsqueeze(1).to(device)
-            # print("mo la")
+            y = y.unsqueeze(1).to(device).float()
             preds = torch.sigmoid(model(x))
             preds = (preds > 0.5).float()
-            loss = loss_fn.forward(preds,y)
+
+            # print(type(preds))
             num_correct += (preds == y).sum()
             num_pixels += torch.numel(preds)
-            dice_score += (2 * (preds * y).sum()) / (
-                (preds + y).sum() + 1e-8
-            )
+            # dice_score += (2 * (preds * y).sum() + 1) / (
+            #     (preds + y).sum() + 1
+            # )
+            loss += loss_fn(preds,y)
+            inputs = preds.view(-1)
+            targets = y.view(-1)
+
+            intersection = (inputs * targets).sum()
+            dice = (2. * intersection + 1) / (inputs.sum() + targets.sum() + 1)
+            d1 += dice
 
     print(
         f"Got {num_correct}/{num_pixels} with acc {num_correct/num_pixels*100:.2f}"
     )
-    print(f"Dice score: {dice_score/len(loader)}")
+    loss = loss.cpu()
+    d1 = d1.cpu()
+    # print(f"Dice score: {dice_score/len(loader)}")
+    print(f"Dice score: {d1 / len(loader)}")
     model.train()
-    return loss, dice_score/len(loader)
+    return loss, d1/len(loader)
 
 def save_checkpoint(state, filename="my_checkpoint2liver.pth.tar"):
     print("=> Saving checkpoint")
@@ -189,9 +212,9 @@ def load_checkpoint(checkpoint, model):
     print("=> Loading checkpoint")
     model.load_state_dict(checkpoint["state_dict"])
 
-def get_loaders(train_ds, val_ds):
-    train_dataloader = DataLoader(train_ds, batch_size=12)
-    val_dataloader = DataLoader(val_ds, batch_size=12)
+def get_loaders(train_ds, val_ds, b_size):
+    train_dataloader = DataLoader(train_ds, batch_size=b_size)
+    val_dataloader = DataLoader(val_ds, batch_size=b_size)
     return train_dataloader, val_dataloader
 
 def remove_bg_only_test(test_seg_paths):
@@ -212,6 +235,25 @@ def clean_test_ds(test_img_paths, test_seg_paths, test_idx):
     return cleaned_img_paths, cleaned_seg_paths
 
 
+def get_features(features):
+    return features
 
+def get_num_layers(features):
+    return len(features)
 
+def save_results(csv, dict):
+    '''
+    This function is used to save the conditions and results of training the DNN in a csv file
+    Args:
+        csv (str): The name of the csv file. Must be in the format 'XXX.csv'
+        dict (dict): The conditions and results of training in the form of a dictionary
 
+    Returns:
+        None
+    '''
+    df = pd.read_csv(csv, index_col=0)
+    df = df.append(dict, ignore_index=True)
+    df.to_csv(csv)
+
+def save_preds():
+    pass
