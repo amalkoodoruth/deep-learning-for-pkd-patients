@@ -115,6 +115,14 @@ def resize_data(data, new_dimensions):
 
 
 def padSlice(values):
+    '''
+    This function adds padding to images. The final size of the image is 320x320
+    Args:
+        values (np.ndarray): The image in the form of a numpy array
+
+    Returns:
+        values (np.ndarray): The padded image
+    '''
     # print(values.shape)
     target_shape = np.array((320, 320))
     pad = ((target_shape - values.shape) / 2).astype("int")
@@ -125,6 +133,21 @@ def padSlice(values):
 
 
 def findOrgan(img, seg, organ):
+    '''
+    This function is used to locate a specific organ in an image.
+    Args:
+        img (np.ndarray): The input image
+        seg (np.ndarray): The segmented image
+        organ (str): The organ that we want to locate. The following key is used:
+            rk: right kidney
+            lk: left kidney
+            lv: liver
+            sp: spleen
+
+    Returns:
+        img (np.ndarray): original image ---> should not be returned
+        new_seg (np.ndarray): the segmented image with only the selected organ segmented
+    '''
     if organ == 'rk':
         value = 126
     elif organ == 'lk':
@@ -153,6 +176,18 @@ def findOrgan(img, seg, organ):
     return img, new_seg
 
 def check_accuracy(loader, model, loss_fn, device="cuda"):
+    '''
+    This function is used to check the accuracy of the model
+    Args:
+        loader (torch.utils.data.DataLoader): The dataloader that is being used
+        model (UNET): The model that is being used
+        loss_fn (): The loss function
+        device: CPU or CUDA
+
+    Returns:
+        loss (float): The total loss for the batch
+        dice_score (float): The average dice coefficient for the batch
+    '''
     num_correct = 0
     num_pixels = 0
     dice_score = 0
@@ -213,6 +248,18 @@ def load_checkpoint(checkpoint, model):
     model.load_state_dict(checkpoint["state_dict"])
 
 def get_loaders(train_ds, val_ds, b_size):
+    '''
+    This function creates the train and validation loaders with the specified batch size
+    Args:
+        train_ds (SliceDataset): The training dataset
+        val_ds (SliceDataset): The validation dataset
+        b_size: The desired batch size
+
+    Returns:
+        train_dataloader (torch.utils.data.DataLoader): The dataloader for the training set
+        val_dataloader (torch.utils.data.DataLoader): The dataloader for the validation set
+
+    '''
     train_dataloader = DataLoader(train_ds, batch_size=b_size)
     val_dataloader = DataLoader(val_ds, batch_size=b_size)
     return train_dataloader, val_dataloader
