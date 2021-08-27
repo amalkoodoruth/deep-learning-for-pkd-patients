@@ -7,7 +7,7 @@ https://chaos.grand-challenge.org/
 We will be using deep learning to carry out the segmentation of 2D images.
 
 ## Preprocessing
-Our dataset consists of DICOM files. We need to preprocess these because the images might have different dimensions. Also we might have to rescale them and try to preserve maximum data. We might therefore have to resample our images. 
+Our dataset consists of DICOM files. We need to preprocess these because the images might have different dimensions. Also we might have to rescale them and try to preserve maximum data. We might therefore have to resample our images. Right now, we are just padding our images with 0s. The images that are fed to the model have dimensions 320x320. Note that it is important that the dimensions are divisible by 16, because of the UNET architecture that we are using. 
 
 The pydicom library is used to work with these files. We will convert that to numpy arrays that will be passed to our neural network.
 
@@ -31,7 +31,7 @@ Data augmentation techniques including flips are implemented to obtain a more ge
 	- torchvision~=0.10.0
 	- tqdm~=4.61.2
 * Change directory to .../deep-learning-for-pkd-patients/beta
-* Run the python script using: python main.py
+* Run the python script using: python train.py
 
 
 ## TO BE IMPLEMENTED
