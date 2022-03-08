@@ -1,5 +1,7 @@
 # deep-learning-for-pkd-patients
 
+## Example notebook in ./beta
+
 ## Goal
 The aim of this research is to predict the disease progression in PKD patients. Because of time constraints, we have only built a beta model that works on public data available at: 
 https://chaos.grand-challenge.org/
